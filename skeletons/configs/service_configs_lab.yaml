@@ -1,0 +1,68 @@
+# IS BROKER CONFIGS
+IS_BROKER:
+        URI: 'amqp://guest:guest@10.20.5.2:30000'
+        CAMERAS: [0, 1, 2, 3]
+        TOPIC_TO_PUBLISH: 'SkeletonsGrouper.0.Localization'
+        PERIOD: 0.200
+
+# 3D RECONSTRUCTION AND TRACKING CONFIGS
+PIPELINE_COMBINATION:
+        DETECT_MODEL: 'YOLOV8'
+        POSE_MODEL: 'RTMPOSE'
+        PERSON_MATCHER: 'Iterative'
+        BUILD_3D: 'SVD'
+        CONF_THRESHOLD: 0.4
+        CAMERA_CALIBRATION_PATH: 'cam_calib/labvisio'
+
+# DETECT_MODELS HYPER PARAMETERS
+DETECT_MODELS:
+        RTMDET:
+                NAME: 'RTMDet'
+                MODEL: 'is_2d_skeleton/backend/RTMDet/models/rtmdet-'  # rtmdet-nano - rtmdet-m
+                SCORE_THRESH: 0.2
+                DEVICE_NAME: 'cuda'
+                DEVICE_ID: 0
+        YOLOV8:
+                NAME: 'YOLOv8'
+                MODEL: 'is_2d_skeleton/backend/YOLOv8/models/yolov8n.pt'
+                DEVICE: 'cuda'
+                IOU: 0.7
+                SCORE_THRESH: 0.5
+        YOLOV3:
+                NAME: 'YOLOv3'
+                CFG: 'is_2d_skeleton/backend/YOLOv3/cfg/yolo_v3.cfg'
+                WEIGHT: 'is_2d_skeleton/backend/YOLOv3/weight/yolov3.weights'
+                CLASS_NAMES: 'is_2d_skeleton/backend/YOLOv3/cfg/coco.names'
+                SCORE_THRESH: 0.5
+                NMS_THRESH: 0.4
+                USE_CUDA: true
+        
+
+# POSE_MODELS HYPER PARAMETERS
+POSE_MODELS:
+        RTMPOSE:
+                NAME: 'RTMPose'
+                MODEL: 'is_2d_skeleton/backend/RTMPose/models/rtmpose-s'
+                DEVICE_NAME: "cuda"
+                DEVICE_ID: 0
+
+# PERSON_MATCHERS HYPER PARAMETERS
+PERSON_MATCHERS:
+        ITERATIVE:
+                NAME: 'Iterative'
+                EPI_THRESHOLD: 20  # 20
+                INIT_THRESHOLD: 10  # 10 melhor valor até agora
+                JOINT_THRESHOLD: 85  # 85 melhor valor até agora
+                NUM_POSITIVE_AFFINITIES: 10  # 10
+                NUM_JOINTS: 17
+                INIT_METHOD: 'GD' # GD: Greedy
+                N_INIT: 3  # 3
+                MAX_AGE: 10  # 10
+                W2D: 0.4
+                ALPHA2D: 85  # 85 melhor valor até agr
+                W3D: 0.6
+                ALPHA3D: 0.15  # 0.15
+                LAMBDA_A: 3  # 3
+                LAMBDA_T: 5
+                SIGMA: 0.3
+                ARM_SIGMA: 0.8

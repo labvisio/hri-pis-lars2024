@@ -1,0 +1,83 @@
+# To test IS service
+DATASET:
+        DATA_TYPE: 'Images'
+        TEST_DATASET: 'CampusSeq1'
+        FOLDERS_ORDER:
+                - Camera0
+                - Camera1
+                - Camera2
+        ROOT: '/home/lucasfoll/Desktop/Datasets/CampusSeq1'
+        CALIBRATION_FILE: 'camera_parameter.pickle'
+        GT_FILE: 'annotation_2d.json'
+        DATA_FORMAT: '*.png'
+        TEST_RANGE:
+                - 347
+                - 751
+        EVAL_RANGE:
+                - - 350
+                  - 471
+                - - 650
+                  - 751
+                # - - 350
+                #   - 751
+
+# Cross View 3D Human Pose Tracking
+PIPELINE_COMBINATION:
+        DETECT_MODEL: YOLOV8
+        POSE_MODEL: RTMPOSE
+        PERSON_MATCHER: 'Iterative'
+        BUILD_3D: 'SVD'
+        CONF_THRESHOLD: 0.4
+        CALIBRATION_FILE: 'camera_parameter.pickle'
+
+# DETECT_MODELS HYPER PARAMETERS
+DETECT_MODELS:
+        RTMDET:
+                NAME: 'RTMDet'
+                MODEL: "src/backend/RTMDet/models/rtmdet-nano"
+                SCORE_THRESH: 0.2
+                DEVICE_NAME: "cuda"
+                DEVICE_ID: 0
+        YOLOV8:
+                NAME: 'YOLOv8'
+                MODEL: "src/backend/YOLOv8/models/yolov8n.pt"
+                DEVICE: "cuda"
+                IOU: 0.7
+                SCORE_THRESH: 0.5
+        YOLOV3:
+                NAME: 'YOLOv3'
+                CFG: "src/backend/YOLOv3/cfg/yolo_v3.cfg"
+                WEIGHT: "src/backend/YOLOv3/weight/yolov3.weights"
+                CLASS_NAMES: "src/backend/YOLOv3/cfg/coco.names"
+                SCORE_THRESH: 0.5
+                NMS_THRESH: 0.4
+                USE_CUDA: true
+        
+
+# POSE_MODELS HYPER PARAMETERS
+POSE_MODELS:
+        RTMPOSE:
+                NAME: 'RTMPose'
+                MODEL: "src/backend/RTMPose/models/rtmpose-s"
+                DEVICE_NAME: "cuda"
+                DEVICE_ID: 0
+
+# PERSON_MATCHERS HYPER PARAMETERS
+PERSON_MATCHERS:
+        ITERATIVE:
+                NAME: 'Iterative'
+                EPI_THRESHOLD: 20  # 20
+                INIT_THRESHOLD: 15  # 10 melhor valor até agora
+                JOINT_THRESHOLD: 85  # 85 melhor valor até agora
+                NUM_JOINTS: 17
+                INIT_METHOD: 'GD' # GD: Greedy
+                N_INIT: 3  # 3
+                MAX_AGE: 5  # 10
+                W2D: 0.4
+                ALPHA2D: 77  # 80 melhor valor até agr
+                W3D: 0.6
+                ALPHA3D: 0.35  # 0.15
+                LAMBDA_A: 3
+                LAMBDA_T: 5
+                SIGMA: 0.3
+                ARM_SIGMA: 0.8
